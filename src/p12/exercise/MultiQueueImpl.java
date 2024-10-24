@@ -36,6 +36,9 @@ public class MultiQueueImpl<T, Q> implements MultiQueue<T, Q>{
     @Override
     public T dequeue(final Q queue) {
         controlQType(queue);
+        if (!(this.queues.containsKey(queue))) {
+            throw new IllegalArgumentException("Wrong argument");
+        }
         final T first = getQueue(queue).getFirst();
         getQueue(queue).removeFirst();
         return first;
@@ -53,8 +56,8 @@ public class MultiQueueImpl<T, Q> implements MultiQueue<T, Q>{
 
     @Override
     public Set<T> allEnqueuedElements() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'allEnqueuedElements'");
+        
+        return null;
     }
 
     @Override
