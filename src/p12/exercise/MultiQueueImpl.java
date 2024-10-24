@@ -29,13 +29,16 @@ public class MultiQueueImpl<T, Q> implements MultiQueue<T, Q>{
     @Override
     public void enqueue(final T elem, final Q queue) {
         controlQType(queue);
+        controlTType(elem);
         this.queues.get(queue).addLast(elem);
     }
 
     @Override
     public T dequeue(final Q queue) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'dequeue'");
+        controlQType(queue);
+        final T first = this.queues.get(queue).getFirst();
+        this.queues.get(queue).removeFirst();
+        return first;
     }
 
     @Override
