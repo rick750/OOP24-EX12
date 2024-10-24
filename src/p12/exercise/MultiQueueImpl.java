@@ -26,9 +26,7 @@ public class MultiQueueImpl<T, Q> implements MultiQueue<T, Q>{
     @Override
     public boolean isQueueEmpty(final Q queue) {
         controlQType(queue);
-        if (!(availableQueues().contains(queue))) {
-            throw new IllegalArgumentException("Wrong argument");
-        }
+        notAvailableException(queue);
         return getQueue(queue).isEmpty(); 
     }
 
@@ -36,18 +34,14 @@ public class MultiQueueImpl<T, Q> implements MultiQueue<T, Q>{
     public void enqueue(final T elem, final Q queue) {
         controlQType(queue);
         controlTType(elem);
-        if (!(availableQueues().contains(queue))) {
-            throw new IllegalArgumentException("Wrong argument");
-        }
+        notAvailableException(queue);
         getQueue(queue).addLast(elem);
     }
 
     @Override
     public T dequeue(final Q queue) {
         controlQType(queue);
-        if (!(availableQueues().contains(queue))) {
-            throw new IllegalArgumentException("Wrong argument");
-        }
+        notAvailableException(queue);
         final T first = getQueue(queue).getFirst();
         getQueue(queue).removeFirst();
         return first;
@@ -99,5 +93,12 @@ public class MultiQueueImpl<T, Q> implements MultiQueue<T, Q>{
     private LinkedList<T> getQueue(final Q queue) {
         controlQType(queue);
         return this.queues.get(queue);
+    }
+
+    // Controls if the queue is available and throw an exception in case it isn't
+    private void notAvailableException(final Q queue) {
+        if (!(availableQueues().contains(queue))) {
+            throw new IllegalArgumentException("Wrong argument");
+        }
     }
 }
