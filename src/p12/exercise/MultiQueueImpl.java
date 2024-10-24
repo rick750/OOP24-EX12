@@ -1,13 +1,13 @@
 package p12.exercise;
 
 import java.util.HashMap;
-import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 public class MultiQueueImpl<T, Q> implements MultiQueue<T, Q>{
-    final private Map<Q, Set<T>> queues = new HashMap<>();
+    final private Map<Q, LinkedList<T>> queues = new HashMap<>();
 
     @Override
     public Set<Q> availableQueues() {
@@ -17,7 +17,7 @@ public class MultiQueueImpl<T, Q> implements MultiQueue<T, Q>{
     @Override
     public void openNewQueue(Q queue) {
         try {
-            this.queues.put(queue, new HashSet<>());
+            this.queues.put(queue, new LinkedList<>());
         } catch (IllegalArgumentException e) {
             System.out.println(e);
         }
@@ -25,13 +25,15 @@ public class MultiQueueImpl<T, Q> implements MultiQueue<T, Q>{
 
     @Override
     public boolean isQueueEmpty(Q queue) {
+        if (!(queue instanceof Q)) {
+            throw new IllegalArgumentException("Wrong Argument");
+        }
         return this.queues.get(queue).isEmpty(); 
     }
 
     @Override
     public void enqueue(T elem, Q queue) {
         // TODO!!!!!
-        //this.queues.put(queue, );
     }
 
     @Override
