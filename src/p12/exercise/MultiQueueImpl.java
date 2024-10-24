@@ -15,29 +15,25 @@ public class MultiQueueImpl<T, Q> implements MultiQueue<T, Q>{
     }
 
     @Override
-    public void openNewQueue(Q queue) {
-        try {
-            this.queues.put(queue, new LinkedList<>());
-        } catch (IllegalArgumentException e) {
-            System.out.println(e);
-        }
+    public void openNewQueue(final Q queue) {
+        controlQType(queue);
+        this.queues.put(queue, new LinkedList<>());
     }
 
     @Override
-    public boolean isQueueEmpty(Q queue) {
-        if (!(queue instanceof Q)) {
-            throw new IllegalArgumentException("Wrong Argument");
-        }
+    public boolean isQueueEmpty(final Q queue) {
+        controlQType(queue);
         return this.queues.get(queue).isEmpty(); 
     }
 
     @Override
-    public void enqueue(T elem, Q queue) {
-        // TODO!!!!!
+    public void enqueue(final T elem, final Q queue) {
+        controlQType(queue);
+        this.queues.get(queue).addLast(elem);
     }
 
     @Override
-    public T dequeue(Q queue) {
+    public T dequeue(final Q queue) {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'dequeue'");
     }
@@ -55,15 +51,29 @@ public class MultiQueueImpl<T, Q> implements MultiQueue<T, Q>{
     }
 
     @Override
-    public List<T> dequeueAllFromQueue(Q queue) {
+    public List<T> dequeueAllFromQueue(final Q queue) {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'dequeueAllFromQueue'");
     }
 
     @Override
-    public void closeQueueAndReallocate(Q queue) {
+    public void closeQueueAndReallocate(final Q queue) {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'closeQueueAndReallocate'");
+    }
+
+    // Controls if the parameter is of type Q and throw an exception in case it isn't
+    private void controlQType(final Q q) {
+        if (!(q instanceof Q)) {
+            throw new IllegalArgumentException("Wrong Argument");
+        }
+    }
+
+    // Controls if the parameter is of type T and throw an exception in case it isn't
+    private void controlTType(final T e) {
+        if (!(e instanceof T)) {
+            throw new IllegalArgumentException("Wrong Argument");
+        }
     }
 
 }
