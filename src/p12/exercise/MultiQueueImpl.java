@@ -83,7 +83,7 @@ public class MultiQueueImpl<T, Q> implements MultiQueue<T, Q>{
         }
     }
 
-    // Return the queue of the key queue
+    // Return the LinkedList<T> of the key 'queue' in this.queues
     private LinkedList<T> getQueue(final Q queue) {
         controlQType(queue);
         return this.queues.get(queue);
