@@ -1,5 +1,6 @@
 package p12.exercise;
 
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -8,6 +9,7 @@ import java.util.Set;
 public class MultiQueueImpl<T, Q> implements MultiQueue<T, Q>{
 
     final private Set<Q> queues = new HashSet<>();
+    final private Map<Q,Set<T>> queuesMap = new HashMap<>();
 
     @Override
     public Set<Q> availableQueues() {
@@ -18,6 +20,7 @@ public class MultiQueueImpl<T, Q> implements MultiQueue<T, Q>{
     public void openNewQueue(Q queue) {
         try {
             this.queues.add(queue);
+            this.queuesMap.put(queue, new HashSet<T>());
         } catch (IllegalArgumentException e) {
             System.out.println(e);
         }
@@ -25,13 +28,12 @@ public class MultiQueueImpl<T, Q> implements MultiQueue<T, Q>{
 
     @Override
     public boolean isQueueEmpty(Q queue) {
-        return queue == null;     
+        return this.queuesMap.get(queue).isEmpty();     
     }
 
     @Override
     public void enqueue(T elem, Q queue) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'enqueue'");
+
     }
 
     @Override
