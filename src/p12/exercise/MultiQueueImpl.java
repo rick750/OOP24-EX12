@@ -17,6 +17,9 @@ public class MultiQueueImpl<T, Q> implements MultiQueue<T, Q>{
     @Override
     public void openNewQueue(final Q queue) {
         controlQType(queue);
+        if (availableQueues().contains(queue)) {
+            throw new IllegalArgumentException("Wrong argument");
+        }
         this.queues.put(queue, new LinkedList<>());
     }
 
