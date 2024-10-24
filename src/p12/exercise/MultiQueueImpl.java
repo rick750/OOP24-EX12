@@ -23,6 +23,9 @@ public class MultiQueueImpl<T, Q> implements MultiQueue<T, Q>{
     @Override
     public boolean isQueueEmpty(final Q queue) {
         controlQType(queue);
+        if (!(availableQueues().contains(queue))) {
+            throw new IllegalArgumentException("Wrong argument");
+        }
         return getQueue(queue).isEmpty(); 
     }
 
@@ -30,13 +33,16 @@ public class MultiQueueImpl<T, Q> implements MultiQueue<T, Q>{
     public void enqueue(final T elem, final Q queue) {
         controlQType(queue);
         controlTType(elem);
+        if (!(availableQueues().contains(queue))) {
+            throw new IllegalArgumentException("Wrong argument");
+        }
         getQueue(queue).addLast(elem);
     }
 
     @Override
     public T dequeue(final Q queue) {
         controlQType(queue);
-        if (!(this.queues.containsKey(queue))) {
+        if (!(availableQueues().contains(queue))) {
             throw new IllegalArgumentException("Wrong argument");
         }
         final T first = getQueue(queue).getFirst();
