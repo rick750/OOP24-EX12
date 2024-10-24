@@ -7,19 +7,16 @@ import java.util.Map;
 import java.util.Set;
 
 public class MultiQueueImpl<T, Q> implements MultiQueue<T, Q>{
-
-    final private Set<Q> queues = new HashSet<>();
     final private Map<Q,Set<T>> queuesMap = new HashMap<>();
 
     @Override
     public Set<Q> availableQueues() {
-        return this.queues;
+        return this.queuesMap.keySet();
     }
 
     @Override
     public void openNewQueue(Q queue) {
         try {
-            this.queues.add(queue);
             this.queuesMap.put(queue, new HashSet<T>());
         } catch (IllegalArgumentException e) {
             System.out.println(e);
@@ -28,7 +25,7 @@ public class MultiQueueImpl<T, Q> implements MultiQueue<T, Q>{
 
     @Override
     public boolean isQueueEmpty(Q queue) {
-        return this.queuesMap.get(queue).isEmpty();     
+        return this.queuesMap.get(queue).isEmpty(); 
     }
 
     @Override
