@@ -1,27 +1,31 @@
 package p12.exercise;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 public class MultiQueueImpl<T, Q> implements MultiQueue<T, Q>{
 
+    final private Set<Q> queues = new HashSet<>();
+
     @Override
     public Set<Q> availableQueues() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'availableQueues'");
+        return this.queues;
     }
 
     @Override
     public void openNewQueue(Q queue) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'openNewQueue'");
+        try {
+            this.queues.add(queue);
+        } catch (IllegalArgumentException e) {
+            System.out.println(e);
+        }
     }
 
     @Override
     public boolean isQueueEmpty(Q queue) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'isQueueEmpty'");
+        return queue == null;     
     }
 
     @Override
