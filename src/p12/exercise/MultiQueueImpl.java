@@ -23,28 +23,32 @@ public class MultiQueueImpl<T, Q> implements MultiQueue<T, Q>{
     @Override
     public boolean isQueueEmpty(final Q queue) {
         controlQType(queue);
-        return this.queues.get(queue).isEmpty(); 
+        return getQueue(queue).isEmpty(); 
     }
 
     @Override
     public void enqueue(final T elem, final Q queue) {
         controlQType(queue);
         controlTType(elem);
-        this.queues.get(queue).addLast(elem);
+        getQueue(queue).addLast(elem);
     }
 
     @Override
     public T dequeue(final Q queue) {
         controlQType(queue);
-        final T first = this.queues.get(queue).getFirst();
-        this.queues.get(queue).removeFirst();
+        final T first = getQueue(queue).getFirst();
+        getQueue(queue).removeFirst();
         return first;
     }
 
     @Override
     public Map<Q, T> dequeueOneFromAllQueues() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'dequeueOneFromAllQueues'");
+        Map<Q, T> dequeuedMap = new HashMap<>();
+        for (var q : this.queues.keySet()) {
+            dequeuedMap.put(q, getQueue(q).getFirst());
+            getQueue(q).removeFirst();
+        }
+        return dequeuedMap;
     }
 
     @Override
@@ -79,4 +83,9 @@ public class MultiQueueImpl<T, Q> implements MultiQueue<T, Q>{
         }
     }
 
+    // Return the queue of the key queue
+    private LinkedList<T> getQueue(final Q queue) {
+        controlQType(queue);
+        return this.queues.get(queue);
+    }
 }
