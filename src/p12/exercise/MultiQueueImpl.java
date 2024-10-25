@@ -45,7 +45,7 @@ public class MultiQueueImpl<T, Q> implements MultiQueue<T, Q>{
         controlQType(queue);
         notAvailableException(queue);
         T first = null;
-        if (!(getQueue(queue).isEmpty())) {
+        if (!(isQueueEmpty(queue))) {
             first = getQueue(queue).getFirst();
             getQueue(queue).removeFirst();
         }
@@ -56,8 +56,10 @@ public class MultiQueueImpl<T, Q> implements MultiQueue<T, Q>{
     public Map<Q, T> dequeueOneFromAllQueues() {
         Map<Q, T> dequeuedMap = new HashMap<>();
         for (var q : this.queues.keySet()) {
-            dequeuedMap.put(q, getQueue(q).getFirst());
-            getQueue(q).removeFirst();
+            if (!(isQueueEmpty(q))) {
+                dequeuedMap.put(q, getQueue(q).getFirst());
+                getQueue(q).removeFirst();
+            }
         }
         return dequeuedMap;
     }
