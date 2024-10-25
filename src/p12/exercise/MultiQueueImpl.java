@@ -1,6 +1,8 @@
 package p12.exercise;
 
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -59,8 +61,12 @@ public class MultiQueueImpl<T, Q> implements MultiQueue<T, Q>{
 
     @Override
     public Set<T> allEnqueuedElements() {
-        
-        return null;
+        Set<T> enqueuedSet = new HashSet<>();
+        Iterator<Q> iter = this.queues.keySet().iterator();
+        while (iter.hasNext()) {
+            enqueuedSet.addAll(getQueue(iter.next()));
+        }
+        return enqueuedSet;
     }
 
     @Override
