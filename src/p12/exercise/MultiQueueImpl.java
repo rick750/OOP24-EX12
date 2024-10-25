@@ -71,8 +71,11 @@ public class MultiQueueImpl<T, Q> implements MultiQueue<T, Q>{
 
     @Override
     public List<T> dequeueAllFromQueue(final Q queue) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'dequeueAllFromQueue'");
+        controlQType(queue);
+        notAvailableException(queue);
+        List<T> enqueuedList = new LinkedList<>();
+        enqueuedList = getQueue(queue);
+        return enqueuedList;
     }
 
     @Override
