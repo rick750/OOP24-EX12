@@ -80,8 +80,9 @@ public class MultiQueueImpl<T, Q> implements MultiQueue<T, Q>{
         controlQType(queue);
         notAvailableException(queue);
         List<T> enqueuedList = new LinkedList<>();
-        for (var elem : getQueue(queue)) {
-            enqueuedList.addLast(elem);
+        Iterator<T> queueIter = getQueue(queue).listIterator();
+        while (queueIter.hasNext()) {
+            enqueuedList.addLast(queueIter.next());
         }
         getQueue(queue).clear();
         return enqueuedList;
@@ -91,11 +92,17 @@ public class MultiQueueImpl<T, Q> implements MultiQueue<T, Q>{
     public void closeQueueAndReallocate(final Q queue) {
         controlQType(queue);
         notAvailableException(queue);
-        if (!(availableQueues().isEmpty())) {
+        if (availableQueues().size() > 1) {            
             Iterator<Q> iter = availableQueues().iterator();
-            for (var elem : dequeueAllFromQueue(queue)) {
-                enqueue(elem, iter.next());
-            }            
+            Q selectedQueue = iter.next();
+            if (selectedQueue == queue) {
+                selectedQueue = iter.next();
+            }
+            Iterator<T> queueIter = getQueue(queue).listIterator();
+            while (queueIter.hasNext()) {
+                enqueue(queueIter.next(), selectedQueue);
+            }        
+            availableQueues().remove(queue);    
         } else {
             throw new IllegalStateException("No queues available");
         }
