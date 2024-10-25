@@ -57,8 +57,9 @@ public class MultiQueueImpl<T, Q> implements MultiQueue<T, Q>{
         Map<Q, T> dequeuedMap = new HashMap<>();
         for (var q : this.queues.keySet()) {
             if (!(isQueueEmpty(q))) {
-                dequeuedMap.put(q, getQueue(q).getFirst());
-                getQueue(q).removeFirst();
+                dequeuedMap.put(q, getQueue(q).removeFirst());
+            } else {
+                dequeuedMap.put(q, null);
             }
         }
         return dequeuedMap;
