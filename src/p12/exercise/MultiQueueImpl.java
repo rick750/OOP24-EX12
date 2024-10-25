@@ -73,15 +73,22 @@ public class MultiQueueImpl<T, Q> implements MultiQueue<T, Q>{
     public List<T> dequeueAllFromQueue(final Q queue) {
         controlQType(queue);
         notAvailableException(queue);
-        List<T> enqueuedList = new LinkedList<>();
-        enqueuedList = getQueue(queue);
+        List<T> enqueuedList = getQueue(queue);
         return enqueuedList;
     }
 
     @Override
     public void closeQueueAndReallocate(final Q queue) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'closeQueueAndReallocate'");
+        controlQType(queue);
+        notAvailableException(queue);
+        if (!(availableQueues().isEmpty())) {
+            Iterator<Q> iter = availableQueues().iterator();
+            for (var elem : dequeueAllFromQueue(queue)) {
+                enqueue(elem, iter.next());
+            }            
+        } else {
+            throw new IllegalStateException("No queues available");
+        }
     }
 
     // Controls if the parameter is of type Q and throw an exception in case it isn't
