@@ -44,8 +44,11 @@ public class MultiQueueImpl<T, Q> implements MultiQueue<T, Q>{
     public T dequeue(final Q queue) {
         controlQType(queue);
         notAvailableException(queue);
-        final T first = getQueue(queue).getFirst();
-        getQueue(queue).removeFirst();
+        T first = null;
+        if (!(getQueue(queue).isEmpty())) {
+            first = getQueue(queue).getFirst();
+            getQueue(queue).removeFirst();
+        }
         return first;
     }
 
@@ -74,6 +77,7 @@ public class MultiQueueImpl<T, Q> implements MultiQueue<T, Q>{
         controlQType(queue);
         notAvailableException(queue);
         List<T> enqueuedList = getQueue(queue);
+        getQueue(queue).clear();
         return enqueuedList;
     }
 
