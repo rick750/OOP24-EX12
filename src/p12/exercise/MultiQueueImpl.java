@@ -76,7 +76,10 @@ public class MultiQueueImpl<T, Q> implements MultiQueue<T, Q>{
     public List<T> dequeueAllFromQueue(final Q queue) {
         controlQType(queue);
         notAvailableException(queue);
-        List<T> enqueuedList = getQueue(queue);
+        List<T> enqueuedList = new LinkedList<>();
+        for (var elem : getQueue(queue)) {
+            enqueuedList.addLast(elem);
+        }
         getQueue(queue).clear();
         return enqueuedList;
     }
@@ -109,7 +112,7 @@ public class MultiQueueImpl<T, Q> implements MultiQueue<T, Q>{
         }
     }
 
-    // Return the LinkedList<T> of the key 'queue' in this.queues
+    // Return the LinkedList<T> (value) of the key 'queue' in this.queues
     private LinkedList<T> getQueue(final Q queue) {
         controlQType(queue);
         return this.queues.get(queue);
