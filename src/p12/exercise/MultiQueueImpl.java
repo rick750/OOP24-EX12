@@ -28,7 +28,7 @@ public class MultiQueueImpl<T, Q> implements MultiQueue<T, Q>{
     @Override
     public boolean isQueueEmpty(final Q queue) {
         controlQType(queue);
-        notAvailableException(queue);
+        checkQueueAvailability(queue);
         return getQueue(queue).isEmpty(); 
     }
 
@@ -36,14 +36,14 @@ public class MultiQueueImpl<T, Q> implements MultiQueue<T, Q>{
     public void enqueue(final T elem, final Q queue) {
         controlQType(queue);
         controlTType(elem);
-        notAvailableException(queue);
+        checkQueueAvailability(queue);
         getQueue(queue).addLast(elem);
     }
 
     @Override
     public T dequeue(final Q queue) {
         controlQType(queue);
-        notAvailableException(queue);
+        checkQueueAvailability(queue);
         T first = null;
         if (!(isQueueEmpty(queue))) {
             first = getQueue(queue).getFirst();
@@ -78,7 +78,7 @@ public class MultiQueueImpl<T, Q> implements MultiQueue<T, Q>{
     @Override
     public List<T> dequeueAllFromQueue(final Q queue) {
         controlQType(queue);
-        notAvailableException(queue);
+        checkQueueAvailability(queue);
         List<T> enqueuedList = new LinkedList<>();
         Iterator<T> queueIter = getQueue(queue).listIterator();
         while (queueIter.hasNext()) {
@@ -91,7 +91,7 @@ public class MultiQueueImpl<T, Q> implements MultiQueue<T, Q>{
     @Override
     public void closeQueueAndReallocate(final Q queue) {
         controlQType(queue);
-        notAvailableException(queue);
+        checkQueueAvailability(queue);
         if (availableQueues().size() > 1) {            
             Iterator<Q> iter = availableQueues().iterator();
             Q selectedQueue = iter.next();
@@ -129,7 +129,7 @@ public class MultiQueueImpl<T, Q> implements MultiQueue<T, Q>{
     }
 
     // Controls if the queue is available and throw an exception in case it isn't
-    private void notAvailableException(final Q queue) {
+    private void checkQueueAvailability(final Q queue) {
         if (!(availableQueues().contains(queue))) {
             throw new IllegalArgumentException("Wrong argument");
         }
