@@ -2,7 +2,6 @@ package p12.exercise;
 
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -59,7 +58,7 @@ public class MultiQueueImpl<T, Q> implements MultiQueue<T, Q>{
     @Override
     public Set<T> allEnqueuedElements() {
         final Set<T> enqueuedSet = new HashSet<>();
-        for (Q key : this.queues.keySet()) {
+        for (final Q key : this.queues.keySet()) {
             enqueuedSet.addAll(getQueue(key));
         }
         return enqueuedSet;
@@ -69,7 +68,7 @@ public class MultiQueueImpl<T, Q> implements MultiQueue<T, Q>{
     public List<T> dequeueAllFromQueue(final Q queue) {
         checkQueueAvailability(queue);
         final List<T> enqueuedList = new LinkedList<>();
-        for (T item : getQueue(queue)) {
+        for (final T item : getQueue(queue)) {
             enqueuedList.add(item);
         }
         getQueue(queue).clear();
@@ -80,18 +79,23 @@ public class MultiQueueImpl<T, Q> implements MultiQueue<T, Q>{
     public void closeQueueAndReallocate(final Q queue) {
         checkQueueAvailability(queue);
         if (availableQueues().size() > 1) {            
-            final Iterator<Q> iter = availableQueues().iterator();
-            Q selectedQueue = iter.next();
-            if (selectedQueue == queue) {
-                selectedQueue = iter.next();
-            }
-            for (T item : getQueue(queue)) {
+            final Q selectedQueue = getAlternativeQueue(queue);
+            for (final T item : getQueue(queue)) {
                 enqueue(item, selectedQueue);
             }      
             availableQueues().remove(queue);    
-        } else {
-            throw new IllegalStateException("No queues available");
         }
+        throw new IllegalStateException("No queues available");
+    }
+
+    // Return a queue from availableQueues different from the one passed as parameter
+    private Q getAlternativeQueue(final Q originalQueue) {
+        for (final Q newQueue : availableQueues()) {
+            if (!(newQueue.equals(originalQueue))) {
+                return newQueue;
+            }
+        }
+        throw new IllegalStateException("No queues available");
     }
 
     // Return the LinkedList<T> (value) of the key 'queue' in this.queues
@@ -105,4 +109,5 @@ public class MultiQueueImpl<T, Q> implements MultiQueue<T, Q>{
             throw new IllegalArgumentException("Wrong argument");
         }
     }
+
 }
