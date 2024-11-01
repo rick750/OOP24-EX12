@@ -18,7 +18,6 @@ public class MultiQueueImpl<T, Q> implements MultiQueue<T, Q>{
 
     @Override
     public void openNewQueue(final Q queue) {
-        controlQType(queue);
         if (availableQueues().contains(queue)) {
             throw new IllegalArgumentException("Wrong argument");
         }
@@ -27,22 +26,18 @@ public class MultiQueueImpl<T, Q> implements MultiQueue<T, Q>{
 
     @Override
     public boolean isQueueEmpty(final Q queue) {
-        controlQType(queue);
         checkQueueAvailability(queue);
         return getQueue(queue).isEmpty(); 
     }
 
     @Override
     public void enqueue(final T elem, final Q queue) {
-        controlQType(queue);
-        controlTType(elem);
         checkQueueAvailability(queue);
         getQueue(queue).addLast(elem);
     }
 
     @Override
     public T dequeue(final Q queue) {
-        controlQType(queue);
         checkQueueAvailability(queue);
         T first = null;
         if (!(isQueueEmpty(queue))) {
@@ -72,7 +67,6 @@ public class MultiQueueImpl<T, Q> implements MultiQueue<T, Q>{
 
     @Override
     public List<T> dequeueAllFromQueue(final Q queue) {
-        controlQType(queue);
         checkQueueAvailability(queue);
         final List<T> enqueuedList = new LinkedList<>();
         for (T item : getQueue(queue)) {
@@ -84,7 +78,6 @@ public class MultiQueueImpl<T, Q> implements MultiQueue<T, Q>{
 
     @Override
     public void closeQueueAndReallocate(final Q queue) {
-        controlQType(queue);
         checkQueueAvailability(queue);
         if (availableQueues().size() > 1) {            
             final Iterator<Q> iter = availableQueues().iterator();
@@ -101,23 +94,8 @@ public class MultiQueueImpl<T, Q> implements MultiQueue<T, Q>{
         }
     }
 
-    // Controls if the parameter is of type Q and throw an exception in case it isn't
-    private void controlQType(final Q q) {
-        if (!(q instanceof Q)) {
-            throw new IllegalArgumentException("Wrong Argument");
-        }
-    }
-
-    // Controls if the parameter is of type T and throw an exception in case it isn't
-    private void controlTType(final T e) {
-        if (!(e instanceof T)) {
-            throw new IllegalArgumentException("Wrong Argument");
-        }
-    }
-
     // Return the LinkedList<T> (value) of the key 'queue' in this.queues
     private LinkedList<T> getQueue(final Q queue) {
-        controlQType(queue);
         return this.queues.get(queue);
     }
 
