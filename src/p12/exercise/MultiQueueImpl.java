@@ -54,21 +54,17 @@ public class MultiQueueImpl<T, Q> implements MultiQueue<T, Q>{
 
     @Override
     public Map<Q, T> dequeueOneFromAllQueues() {
-        Map<Q, T> dequeuedMap = new HashMap<>();
-        for (var q : this.queues.keySet()) {
-            if (!(isQueueEmpty(q))) {
-                dequeuedMap.put(q, getQueue(q).removeFirst());
-            } else {
-                dequeuedMap.put(q, null);
-            }
+        final Map<Q, T> dequeuedMap = new HashMap<>();
+        for (final var q : this.queues.keySet()) {
+            dequeuedMap.put(q, isQueueEmpty(q) ? null : getQueue(q).removeFirst());        
         }
         return dequeuedMap;
     }
 
     @Override
     public Set<T> allEnqueuedElements() {
-        Set<T> enqueuedSet = new HashSet<>();
-        Iterator<Q> iter = this.queues.keySet().iterator();
+        final Set<T> enqueuedSet = new HashSet<>();
+        final Iterator<Q> iter = this.queues.keySet().iterator();
         while (iter.hasNext()) {
             enqueuedSet.addAll(getQueue(iter.next()));
         }
@@ -79,8 +75,8 @@ public class MultiQueueImpl<T, Q> implements MultiQueue<T, Q>{
     public List<T> dequeueAllFromQueue(final Q queue) {
         controlQType(queue);
         checkQueueAvailability(queue);
-        List<T> enqueuedList = new LinkedList<>();
-        Iterator<T> queueIter = getQueue(queue).listIterator();
+        final List<T> enqueuedList = new LinkedList<>();
+        final Iterator<T> queueIter = getQueue(queue).listIterator();
         while (queueIter.hasNext()) {
             enqueuedList.addLast(queueIter.next());
         }
@@ -93,12 +89,12 @@ public class MultiQueueImpl<T, Q> implements MultiQueue<T, Q>{
         controlQType(queue);
         checkQueueAvailability(queue);
         if (availableQueues().size() > 1) {            
-            Iterator<Q> iter = availableQueues().iterator();
+            final Iterator<Q> iter = availableQueues().iterator();
             Q selectedQueue = iter.next();
             if (selectedQueue == queue) {
                 selectedQueue = iter.next();
             }
-            Iterator<T> queueIter = getQueue(queue).listIterator();
+            final Iterator<T> queueIter = getQueue(queue).listIterator();
             while (queueIter.hasNext()) {
                 enqueue(queueIter.next(), selectedQueue);
             }        
