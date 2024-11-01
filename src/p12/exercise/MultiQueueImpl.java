@@ -64,9 +64,8 @@ public class MultiQueueImpl<T, Q> implements MultiQueue<T, Q>{
     @Override
     public Set<T> allEnqueuedElements() {
         final Set<T> enqueuedSet = new HashSet<>();
-        final Iterator<Q> iter = this.queues.keySet().iterator();
-        while (iter.hasNext()) {
-            enqueuedSet.addAll(getQueue(iter.next()));
+        for (Q key : this.queues.keySet()) {
+            enqueuedSet.addAll(getQueue(key));
         }
         return enqueuedSet;
     }
